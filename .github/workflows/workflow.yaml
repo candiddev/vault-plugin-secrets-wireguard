@@ -1,0 +1,29 @@
+name: release
+
+on:
+  pull_request:
+  push:
+    tags:
+      - v*
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Test
+        run: |
+          make test
+      - name: Build
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          make release
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: "vault-plugin-secrets-wireguard*"
+          file_glob: true
+          overwrite: true
+          repo_token: ${{ github.token }}

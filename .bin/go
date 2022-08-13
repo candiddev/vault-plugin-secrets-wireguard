@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+GOARCH=${GOARCH:-amd64}
+GOOS=${GOOS:-linux}
+
+export DIR=$(cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P)
+docker run -e GOCACHE=/app/.cache -e "GOARCH=${GOARCH}" -e "GOOS=${GOOS}" -u "$(id -u):$(id -g)" --rm -v ${DIR}/../:/app -w /app golang:1.18 go "$@"
