@@ -2,6 +2,12 @@
 
 > Automatically generate Wireguard keys and configurations for your servers to create a Wireguard mesh network.
 
+## Archived
+
+Vault doesn't have a good way to watch changes, so this plugin leveraged a low TTL to have clients constantly check for new members.  At scale, this causes some weird race conditions as clients eventually connect.  The TTL can be tweaked up/down in theory, but that puts more load on the Vault server.
+
+Instead, we switched to using Consul watches and store the WireGuard public key in the Consul node meta.  Consul watches iterate through all nodes on changes and render a new WireGuard private key definition.
+
 ## Install
 
 1. Add `plugin_directory = "<folder-where-you-will-put-the plugin>"` to your vault config
